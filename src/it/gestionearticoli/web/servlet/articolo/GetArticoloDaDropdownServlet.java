@@ -22,7 +22,10 @@ public class GetArticoloDaDropdownServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,6 +55,8 @@ public class GetArticoloDaDropdownServlet extends HttpServlet {
 				request.getRequestDispatcher("articolo/results.jsp").forward(request,response);
 			} catch(Exception e) {
 				e.printStackTrace();
+				request.setAttribute("dangerMessage","Errore nella ricerca dell'articolo richiesto.");
+				request.getRequestDispatcher("menu.jsp").forward(request,response);
 			}
 			
 		}

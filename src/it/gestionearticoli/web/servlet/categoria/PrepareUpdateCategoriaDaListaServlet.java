@@ -39,14 +39,18 @@ public class PrepareUpdateCategoriaDaListaServlet extends HttpServlet {
 				request.getRequestDispatcher("categoria/updateCategoria.jsp").forward(request,response);				
 			}
 		} catch(Exception e) {
-			System.err.println("Errore nel reperire la categoria!");
+			request.setAttribute("dangerMessage","Errore nel reperimento della categoria richiesta");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
 			e.printStackTrace();
 		} 
 		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 }

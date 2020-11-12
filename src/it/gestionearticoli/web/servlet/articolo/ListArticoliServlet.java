@@ -31,12 +31,19 @@ public class ListArticoliServlet extends HttpServlet {
 	try {
 		request.setAttribute("listaArticoliAttribute", MyServiceFactory.getArticoloServiceInstance().listAll());	
 		} catch (Exception e) {
+			request.setAttribute("dangerMessage","Errore nel recupero degli articoli richiesti.");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
 			e.printStackTrace();
+			return;
 		}
 		request.getRequestDispatcher("articolo/results.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 }

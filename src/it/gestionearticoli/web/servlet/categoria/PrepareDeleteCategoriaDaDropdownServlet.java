@@ -1,7 +1,6 @@
 package it.gestionearticoli.web.servlet.categoria;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,7 +21,10 @@ public class PrepareDeleteCategoriaDaDropdownServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,11 +57,10 @@ public class PrepareDeleteCategoriaDaDropdownServlet extends HttpServlet {
 					request.setAttribute("idCategoriaDaEliminare",categoria.getIdCategoria());
 					request.getRequestDispatcher("categoria/confermaEliminazioneCategoria.jsp").forward(request,response);
 				}
-			} catch(SQLException e) {
-				request.setAttribute("errorMessage","Operazione non riuscita!");
-				request.getRequestDispatcher("categoria/deleteDaDropdownCategoria.jsp").forward(request,response);
 			} catch(Exception e) {
 				e.printStackTrace();
+				request.setAttribute("dangerMessage","Errore nel reperimento della categoria richiesta, o nella sua eliminazione.");
+				request.getRequestDispatcher("menu.jsp").forward(request,response);
 			}
 		}
 	}

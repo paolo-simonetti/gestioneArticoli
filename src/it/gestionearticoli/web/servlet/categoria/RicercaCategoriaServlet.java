@@ -33,6 +33,8 @@ public class RicercaCategoriaServlet extends HttpServlet {
 				return;
 			} catch(Exception e) {
 				e.printStackTrace();
+				request.setAttribute("dangerMessage","Errore nel reperimento delle categorie presenti.");
+				request.getRequestDispatcher("menu.jsp").forward(request,response);
 			}
 		} else {
 			/* L'input di ricerca potrebbe essere "giocattoli divertentissimi", e voglio che tra i risultati compaiano anche categorie 
@@ -48,7 +50,7 @@ public class RicercaCategoriaServlet extends HttpServlet {
 			// Ora che ho la collection di parole su cui effettuare la ricerca, la passo al metodo che effettua la ricerca.
 			try {
 				TreeSet<Categoria> categorieRisultanti=MyServiceFactory.getCategoriaServiceInstance().
-						ricercaCategoria(pezziComponentiInput); //TODO: implementa ricercaCategoria in service e in DAO. 			
+						ricercaCategoria(pezziComponentiInput);  			
 				if (categorieRisultanti==null) {
 					request.setAttribute("dangerMessage","La ricerca non ha prodotto risultati");
 					request.getRequestDispatcher("formRicercaAvanzataCategoria.jsp").forward(request,response);
@@ -59,6 +61,8 @@ public class RicercaCategoriaServlet extends HttpServlet {
 				}
 			} catch(Exception e) {
 				e.printStackTrace();
+				request.setAttribute("dangerMessage","Errore nell'esecuzione della ricerca richiesta");
+				request.getRequestDispatcher("menu.jsp").forward(request,response);
 			}
 
 		}

@@ -43,6 +43,8 @@ public class PrepareDeleteArticoloDaListaServlet extends HttpServlet {
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
+			request.setAttribute("dangerMessage","Errore nella ricerca dell'articolo richiesto");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
 		}
 	}
 

@@ -58,17 +58,20 @@ public class RicercaArticoloServlet extends HttpServlet {
 				return;
 			} catch(Exception e) {
 				e.printStackTrace();
+				request.setAttribute("dangerMessage","Errore nel reperimento degli articoli presenti.");
+				request.getRequestDispatcher("menu.jsp").forward(request,response);
+				return;
 			}
 		} else {
 			/*Definisco una mappa le cui chiavi sono i campi di ricerca non nulli, e i valori sono gli array di stringhe 
 			  componenti i singoli campi */
 			TreeMap<String,TreeSet<String>> inputRicerca=new TreeMap<>();
 			if (codiceInputParam!=null&&!codiceInputParam.isEmpty()) {
-				// se il codice è un campo di ricerca non vuoto, separo la stringa in più
+				// se il codice è un campo di ricerca non vuoto, separo la stringa nelle parole che la compongono
 				String[] pezziComponentiCodiceInputParam=codiceInputParam.trim().split("\\s+");
 				TreeSet<String> pezziComponentiCodice=new TreeSet<>();
 				for (int i=0; i<pezziComponentiCodiceInputParam.length; i++) {
-					if (!(pezziComponentiCodiceInputParam[i].isEmpty())) {
+					if (!(pezziComponentiCodiceInputParam[i].isEmpty())) { // mi curo di eliminare eventuali elementi rimasti vuoti
 						pezziComponentiCodice.add(pezziComponentiCodiceInputParam[i]);
 					} 
 				}
@@ -107,6 +110,8 @@ public class RicercaArticoloServlet extends HttpServlet {
 				request.getRequestDispatcher("articolo/results.jsp").forward(request,response);
 			} catch(Exception e) {
 				e.printStackTrace();
+				request.setAttribute("dangerMessage","Errore nell'esecuzione della ricerca.");
+				request.getRequestDispatcher("menu.jsp").forward(request,response);
 			} 
 		}
 				

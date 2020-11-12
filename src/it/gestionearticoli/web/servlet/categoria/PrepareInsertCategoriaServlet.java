@@ -29,6 +29,10 @@ public class PrepareInsertCategoriaServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 }

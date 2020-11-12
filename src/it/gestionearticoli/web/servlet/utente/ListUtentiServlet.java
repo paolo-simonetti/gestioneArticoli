@@ -27,12 +27,15 @@ public class ListUtentiServlet extends HttpServlet {
 			request.getRequestDispatcher("welcome.jsp").forward(request,response);
 			return;
 		}
-	try {
-		request.setAttribute("listaUtentiAttribute", MyServiceFactory.getUtenteServiceInstance().listAll());
+		try {
+			request.setAttribute("listaUtentiAttribute", MyServiceFactory.getUtenteServiceInstance().listAll());
 		} catch (Exception e) {
-		e.printStackTrace();
+			e.printStackTrace();
+			request.setAttribute("dangerMessage","Errore nel reperimento degli utenti presenti");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
+			return;
 		}
-	request.getRequestDispatcher("utente/elencoUtenti.jsp").forward(request, response);
+		request.getRequestDispatcher("utente/elencoUtenti.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

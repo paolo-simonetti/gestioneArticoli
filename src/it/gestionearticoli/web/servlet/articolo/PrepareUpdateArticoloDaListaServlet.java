@@ -42,14 +42,20 @@ public class PrepareUpdateArticoloDaListaServlet extends HttpServlet {
 				request.setAttribute("listaCategorieAttribute",MyServiceFactory.getCategoriaServiceInstance().listAll());
 			}
 		} catch (Exception e) {
+			request.setAttribute("dangerMessage","Errore nell'esecuzione dell'operazione richiesta");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
 			e.printStackTrace();
+			return;
 		}
 		request.getRequestDispatcher("articolo/update.jsp").forward(request, response);
 
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 }

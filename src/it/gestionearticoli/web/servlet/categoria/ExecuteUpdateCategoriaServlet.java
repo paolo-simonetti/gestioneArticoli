@@ -22,7 +22,10 @@ public class ExecuteUpdateCategoriaServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,31 +41,30 @@ public class ExecuteUpdateCategoriaServlet extends HttpServlet {
 		String nomeCategoriaInputParam=request.getParameter("nomeCategoria");
 		Long idCategoria=Long.parseLong(idCategoriaInputParam);
 		//controllo se la categoria inserita è tra quelle presenti (e quindi non è aggiornabile)
-	try {
-		TreeSet<Categoria> categoriePresenti=MyServiceFactory.getCategoriaServiceInstance().listAll();
-		boolean categoriaGiaPresente=false;
-		for (Categoria c:categoriePresenti) {
-			if (nomeCategoriaInputParam.equals(c.getNomeCategoria())) {
-				categoriaGiaPresente=true;
-				break;
+		try {
+			TreeSet<Categoria> categoriePresenti=MyServiceFactory.getCategoriaServiceInstance().listAll();
+			boolean categoriaGiaPresente=false;
+			for (Categoria c:categoriePresenti) {
+				if (nomeCategoriaInputParam.equals(c.getNomeCategoria())) {
+					categoriaGiaPresente=true;
+					break;
+				}
 			}
+			if (categoriaGiaPresente) {
+				request.setAttribute("errorMessage","La categoria inserita è già presente nella lista!");
+				request.setAttribute("categoriaDaAggiornare",MyServiceFactory.getCategoriaServiceInstance().trovaTramiteId(idCategoria));
+				request.getRequestDispatcher("categoria/updateCategoria.jsp").forward(request,response);
+			} else {
+				Categoria categoriaDaInserire=MyServiceFactory.getCategoriaServiceInstance().trovaTramiteId(idCategoria);
+				categoriaDaInserire.setNomeCategoria(nomeCategoriaInputParam);
+				MyServiceFactory.getCategoriaServiceInstance().aggiorna(categoriaDaInserire);
+				request.setAttribute("listaCategorieAttribute",MyServiceFactory.getCategoriaServiceInstance().listAll());
+				request.getRequestDispatcher("categoria/elencoCategorie.jsp").forward(request,response); 				
+			}
+		} catch (Exception e) {
+			request.setAttribute("dangerMessage","Errore nell'aggiornamento della categoria");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);			
+			e.printStackTrace();
 		}
-		if (categoriaGiaPresente) {
-			request.setAttribute("errorMessage","La categoria inserita è già presente nella lista!");
-			request.setAttribute("categoriaDaAggiornare",MyServiceFactory.getCategoriaServiceInstance().trovaTramiteId(idCategoria));
-			request.getRequestDispatcher("categoria/updateCategoria.jsp").forward(request,response);
-		} else {
-			Categoria categoriaDaInserire=MyServiceFactory.getCategoriaServiceInstance().trovaTramiteId(idCategoria);
-			categoriaDaInserire.setNomeCategoria(nomeCategoriaInputParam);
-			MyServiceFactory.getCategoriaServiceInstance().aggiorna(categoriaDaInserire);
-			request.setAttribute("listaCategorieAttribute",MyServiceFactory.getCategoriaServiceInstance().listAll());
-			request.getRequestDispatcher("categoria/elencoCategorie.jsp").forward(request,response); 				
-		}
-	} catch (Exception e) {
-		System.err.println("Errore nell'aggiornamento della categoria!");
-		e.printStackTrace();
 	}
-
-	}
-
 }

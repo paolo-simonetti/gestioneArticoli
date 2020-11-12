@@ -43,12 +43,17 @@ public class GetCategoriaDaListaServlet extends HttpServlet {
 			request.setAttribute("listaArticoliAttribute",articoliDiCategoriaInput);
 			request.getRequestDispatcher("articolo/results.jsp").forward(request,response);
 		} catch(Exception e) {
-			System.err.println("Errore nel recupero degli articoli della categoria richiesta");
+			request.setAttribute("dangerMessage","Errore nell'esecuzione dell'operazione richiesta");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
 			e.printStackTrace();
 		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 }

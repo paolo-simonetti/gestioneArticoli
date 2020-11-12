@@ -30,15 +30,19 @@ public class ListCategorieServlet extends HttpServlet {
 		try {
 			request.setAttribute("listaCategorieAttribute",MyServiceFactory.getCategoriaServiceInstance().listAll());			
 		} catch(Exception e) {
-			System.err.println("Problemi nel recupero delle categorie dal db");
+			request.setAttribute("dangerMessage","Errore nel reperimento delle categorie presenti.");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
 			e.printStackTrace();
-		} finally {
-			request.getRequestDispatcher("categoria/elencoCategorie.jsp").forward(request,response);
-		} 
-		
+			return;
+		}
+		request.getRequestDispatcher("categoria/elencoCategorie.jsp").forward(request,response);		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 }

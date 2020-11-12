@@ -32,13 +32,19 @@ public class PrepareInsertArticoloServlet extends HttpServlet {
 			request.setAttribute("listaCategorieAttribute",MyServiceFactory.getCategoriaServiceInstance().listAll());			
 		} catch(Exception e) {
 			e.printStackTrace();
+			request.setAttribute("dangerMessage","Errore nel reperimento delle categorie disponibili");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
+			return;
 		}
 		request.getRequestDispatcher("articolo/insert.jsp").forward(request, response);
 
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 }

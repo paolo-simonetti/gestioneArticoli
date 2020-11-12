@@ -22,8 +22,11 @@ public class ExecuteInsertArticoloServlet extends HttpServlet {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
@@ -45,8 +48,10 @@ public class ExecuteInsertArticoloServlet extends HttpServlet {
 		try {
 			articoliPresenti=MyServiceFactory.getArticoloServiceInstance().listAll();
 		} catch(Exception e) {
-			System.err.println("Errore nel recupero degli articoli presenti");
+			request.setAttribute("dangerMessage","Errore nel recupero degli articoli presenti sul sito.");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
 			e.printStackTrace();
+			return;
 		}
 		for (Articolo a:articoliPresenti) {
 			if (descrizioneInputParam.equals(a.getDescrizione())) {
@@ -92,7 +97,8 @@ public class ExecuteInsertArticoloServlet extends HttpServlet {
 				request.getRequestDispatcher("articolo/results.jsp").forward(request,response); 				
 			}
 		} catch (Exception e) {
-			System.err.println("Errore nell'inserimento della nuova categoria nel db!");
+			request.setAttribute("dangerMessage","Errore nell'inserimento dell'articolo.");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
 			e.printStackTrace();
 		}
 

@@ -32,11 +32,16 @@ public class PrePrepareUpdateCategoriaDaDropdownServlet extends HttpServlet {
 			request.getRequestDispatcher("categoria/updateDaDropdownCategoria.jsp").forward(request,response);			
 		} catch(Exception e) {
 			e.printStackTrace();
+			request.setAttribute("dangerMessage","Errore nel reperimento delle categorie presenti.");
+			request.getRequestDispatcher("menu.jsp").forward(request,response);
 		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		request.setAttribute("permessiMancantiMessage","E' stato rilevato un tentativo di cambiare la tipologia di richiesta al server.");
+		request.getRequestDispatcher("welcome.jsp").forward(request,response);
+		HttpSession session=request.getSession();
+		session.invalidate();
 	}
 
 }
